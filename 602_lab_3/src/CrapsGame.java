@@ -13,12 +13,12 @@ public class CrapsGame
 
 	public CrapsGame()
 	{
-		dice = new Dice(); // equivalent to below: see why?
+		//dice = new Dice(); // equivalent to below: see why?
 		// dice = new Dice(new Die(), new Die());
 		
 		// replace above with the followig, to cheat: one good, one bad die
-		// dice = new Dice(new CrookedDie1(), new Die());
-
+		dice = new Dice(new CrookedDie1(), new CrookedDie1());
+		
 	}
 
 	public boolean playOneGame(int[] wins, int[] losses)
