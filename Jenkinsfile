@@ -9,7 +9,7 @@ node('linux') {
                    sh 'aws cloudformation wait stack-create-complete --stack-name test2 --region us-east-1' 
                    sh 'aws cloudformation describe-stacks --stack-name test2 --region us-east-1'
                    env.docker1IP = sh returnStdout: true, script: 'aws cloudformation describe-stacks --stack-name test2 --region us-east-1 --query Stacks[].Outputs[].[OutputValue] --output text'
-                     withCredentials([sshUserPrivateKey(credentialsId: 'f0dc459d-aaa8-4108-a407-209b65dc48a7', keyFileVariable: '', passphraseVariable: '', usernameVariable: '')]) {
+                     withCredentials([sshUserPrivateKey(credentialsId: '098f2c76-0825-4ed2-b1a0-f4a2eedcd343', keyFileVariable: '', passphraseVariable: '', usernameVariable: '')]) {
                      sh 'ssh -o StrictHostKeyChecking=no ubuntu@${docker1IP} uptime'
                      }
              }
