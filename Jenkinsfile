@@ -25,7 +25,7 @@ node('linux') {
         stage('Test Redis Standalone') {
                sshagent(['2fbfa993-05c8-4a3d-9e38-16f3a57799c8']) {
                        sh "ssh ubuntu@${docker1IP} redis-cli set hello world"
-					   sh 'ssh ubuntu@${docker1IP} redis-cli get hello'
+					   sh "ssh ubuntu@${docker1IP} redis-cli get hello"
 
                }	
 
