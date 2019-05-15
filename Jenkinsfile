@@ -10,8 +10,34 @@ node('linux') {
                    sh 'aws cloudformation describe-stacks --stack-name test2 --region us-east-1'
                    env.docker1IP = sh returnStdout: true, script: 'aws cloudformation describe-stacks --stack-name test2 --region us-east-1 --query Stacks[].Outputs[].[OutputValue] --output text'
                      sshagent(['0d06c97d-4ce8-40b2-a52c-7cb3dea6a31b']) {
-                             sh "ssh -o StrictHostKeyChecking=no safa1611@${docker1IP}"
+                             sh "ssh -o StrictHostKeyChecking=no ubuntu@${docker1IP}"
              }
         }
 }
+      stage('Deploy Redis Standalone') {
+               sshagent(['0d06c97d-4ce8-40b2-a52c-7cb3dea6a31b']) {
+                    sh 'ssh ubuntu@${docker1IP} docker run -d --name redis -p 6379:6379 redis:latest'
+
+               }
+
+        }
+
+        stage('Test Redis Standalone') {
+               sshagent(['0d06c97d-4ce8-40b2-a52c-7cb3dea6a31b']) {
+                       sh 'ssh ubuntu@${docker1IP} redis-cli set hello world'
+					   sh 'ssh ubuntu@${docker1IP} redis-cli get hello'
+
+               }	
+
+        }
+        stage('Delete Test Stack') {
+               withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: '0776525b-8d0c-4b04-9237-4625bfc903d3', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                       sh 'aws cloudformation delete-stack --stack-name final-test --region us-east-1'
+                       sh 'aws cloudformation wait stack-delete-complete --stack-name final-test --region us-east-1'
+
+              }
+
+       }
+
 }
+
