@@ -9,7 +9,7 @@ node('linux') {
                    sh 'aws cloudformation describe-stacks --stack-name test2 --region us-east-1'
                    env.docker1IP = sh returnStdout: true, script: 'aws cloudformation describe-stacks --stack-name test2 --region us-east-1 --query Stacks[].Outputs[].[OutputValue] --output text'
                    sshagent(['f4376492-2ada-4fcf-ade0-ffd57ae68c2e']) {
-                   sh 'ssh -o StrictHostKeyChecking=no ubuntu@35.168.59.244 uptime'
+                   sh 'ssh -o StrictHostKeyChecking=no ubuntu@$dockerIp uptime'
 
                    }
              }
