@@ -9,13 +9,13 @@ node('linux') {
                    sh 'aws cloudformation wait stack-create-complete --stack-name test2 --region us-east-1' 
                    sh 'aws cloudformation describe-stacks --stack-name test2 --region us-east-1'
                    env.docker1IP = sh returnStdout: true, script: 'aws cloudformation describe-stacks --stack-name test2 --region us-east-1 --query Stacks[].Outputs[].[OutputValue] --output text'
-                     sshagent(['0d06c97d-4ce8-40b2-a52c-7cb3dea6a31b']) {
-                             sh "ssh -o StrictHostKeyChecking=no ubuntu@${docker1IP}"
+                     sshagent(['2fbfa993-05c8-4a3d-9e38-16f3a57799c8']) {
+                             sh 'ssh -o StrictHostKeyChecking=no ubuntu@${docker1IP}'
              }
         }
 }
       stage('Deploy Redis Standalone') {
-               sshagent(['0d06c97d-4ce8-40b2-a52c-7cb3dea6a31b']) {
+               sshagent(['2fbfa993-05c8-4a3d-9e38-16f3a57799c8']) {
                     sh 'ssh ubuntu@${docker1IP} docker run -d --name redis -p 6379:6379 redis:latest'
 
                }
@@ -23,7 +23,7 @@ node('linux') {
         }
 
         stage('Test Redis Standalone') {
-               sshagent(['0d06c97d-4ce8-40b2-a52c-7cb3dea6a31b']) {
+               sshagent(['2fbfa993-05c8-4a3d-9e38-16f3a57799c8']) {
                        sh 'ssh ubuntu@${docker1IP} redis-cli set hello world'
 					   sh 'ssh ubuntu@${docker1IP} redis-cli get hello'
 
